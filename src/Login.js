@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+// import { useNavigate } from 'react-router-dom';
 
-function Login() {
+function Login({ updateUserDetails}) {
+  // const navigate = useNavigate();
   const [formdata,setformdata] = useState({
     username: '',
     password: ''
@@ -38,6 +40,14 @@ function Login() {
       event.preventDefault();
       if (validate()) {
         if(formdata.username === 'admin' && formdata.password === 'admin') {
+          // Assuming the user is authenticated successfully
+          // navigate('/dashboard'); 
+          // You can also pass user details to the parent component if needed
+
+          updateUserDetails({
+            username: "Aditya",
+            email: "Adi@gmail.com"
+          });
           setMessage('Login successful');
         }else {
           setMessage('Invalid username or password');
@@ -45,7 +55,7 @@ function Login() {
       }
     }
   return (
-    <div>
+    <div className='container text-center'>
       <h1>Login Page</h1>
       {message && (
         message
@@ -57,14 +67,14 @@ function Login() {
           onChange={handleChange}/>
           {errors.username && (<span className='error'>{errors.username}</span>)}
         </div>
-        <div>
+        <div className='container text-center'>
           <label>Password</label>
           <input type='text'name='password' value={formdata.password}
           onChange={handleChange}
           />
           {errors.password && (<span className='error'>{errors.password}</span>)}
         </div>
-        <div>
+        <div className='container text-center'>
           <button type='submit'>Login</button>
         </div>
       </form>
