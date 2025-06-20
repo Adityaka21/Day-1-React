@@ -6,7 +6,8 @@ import Login from './Login.js';
 import Home from './Home.js';
 import AppLayout from './layout/AppLayout.js';
 import Dashboard from './pages/Dashboard.js';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 function App() {
   const [userDetails,setUserDetails] = useState(null);
 
@@ -14,6 +15,21 @@ function App() {
     setUserDetails(upadatedData)
     
   }
+
+  const isUserLoggedIn = async() => {
+    try{
+      const response = await axios.post('http://localhost:5000/auth/is-user-logged-in', {}, {
+        withCredentials: true
+      });
+      updateUserDetails(response.data.userDetails);
+
+    }catch (error) {
+      console.log('User is not logged in', error);
+    }
+  };
+  useEffect(() => {
+    isUserLoggedIn();
+  }, []);
 
   return (
     <Routes>

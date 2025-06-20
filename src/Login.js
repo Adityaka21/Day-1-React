@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 // import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function Login({ updateUserDetails}) {
   // const navigate = useNavigate();
@@ -36,22 +37,40 @@ function Login({ updateUserDetails}) {
      
   // This function will handle the form submission
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
       event.preventDefault();
       if (validate()) {
-        if(formdata.username === 'admin' && formdata.password === 'admin') {
+        // if(formdata.username === 'admin' && formdata.password === 'admin') {
           // Assuming the user is authenticated successfully
           // navigate('/dashboard'); 
           // You can also pass user details to the parent component if needed
 
-          updateUserDetails({
-            username: "Aditya",
-            email: "Adi@gmail.com"
-          });
-          setMessage('Login successful');
-        }else {
-          setMessage('Invalid username or password');
+          // updateUserDetails({
+          //   username: "Aditya",
+          //   email: "Adi@gmail.com"
+          // });
+        //   setMessage('Login successful');
+        // }else {
+        //   setMessage('Invalid username or password');
+        // }
+
+        //Integrate with Rest endpoint
+        const body = {
+          username: formdata.username,
+          password: formdata.password
+        };
+
+        const configuration = {
+          withCredentials: true
+        };
+        try{
+        const response = await axios.post('http://localhost:5000/auth/login', body, configuration);
+        updateUserDetails(response.data.userDetails);
         }
+        catch(error) {
+          setErrors({message: 'Something went wrong, please try again later.'});
+        }
+          
       }
     }
   return (
@@ -60,6 +79,7 @@ function Login({ updateUserDetails}) {
       {message && (
         message
       )}
+      {errors.message && (errors.message)}
       <form onSubmit={handleSubmit}>
         <div>
           <label>Username</label>
